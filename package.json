@@ -1,7 +1,9 @@
 {
   "name": "bigfrontend",
   "scripts": {
-    "test": "jest",
+    "test": "jest --verbose",
+    "test:changed": "jest --verbose -o",
+    "ts-node": "ts-node",
     "prepare": "husky install",
     "pre-commit": "lint-staged"
   },
@@ -17,6 +19,7 @@
     "lint-staged": "^12.3.4",
     "prettier": "^2.5.1",
     "ts-jest": "^27.1.3",
+    "ts-node": "^10.5.0",
     "typescript": "^4.5.5"
   },
   "lint-staged": {
