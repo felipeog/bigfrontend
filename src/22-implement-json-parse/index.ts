@@ -51,6 +51,3 @@ export function parse(str: string) {
 
   throw new Error('Invalid input.')
 }
-
-const input = '[{"a":{"b":{"c":[1]}}},null,"str"]'
-console.log(parse(input))
