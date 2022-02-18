@@ -1,5 +1,4 @@
 export function parse(str: string) {
-  const SIMPLE_RETURNS = ['[]', '{}', 'false', 'null', 'true']
   const SIMPLE_RETURNS_MAP = {
     '[]': [],
     '{}': {},
@@ -7,6 +6,7 @@ export function parse(str: string) {
     null: null,
     true: true,
   }
+  const SIMPLE_RETURNS_KEYS = Object.keys(SIMPLE_RETURNS_MAP)
 
   if (!str) {
     throw new Error('Invalid input.')
@@ -16,11 +16,11 @@ export function parse(str: string) {
     throw new Error('Apostrophe is not parsable.')
   }
 
-  if (SIMPLE_RETURNS.includes(str)) {
+  if (SIMPLE_RETURNS_KEYS.includes(str)) {
     return SIMPLE_RETURNS_MAP[str]
   }
 
-  if (+str === +str) {
+  if (!isNaN(+str)) {
     return +str
   }
 
