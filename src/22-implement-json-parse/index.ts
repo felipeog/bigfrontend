@@ -1,3 +1,89 @@
+function splitObjectValues(rawInput: string) {
+  const input = rawInput.slice(1, -1)
+  const values = []
+  let buffer = ''
+  let depth = 0
+  let isValue = false
+  let isQuote = false
+
+  for (let i = 0; i < input.length; i++) {
+    const current = input[i]
+
+    if (current === ':') {
+      isValue = true
+    }
+
+    if (current === '"' && isValue) {
+      isQuote = !isQuote
+    }
+
+    if (['{', '['].includes(current) && isValue) {
+      depth++
+    }
+
+    if (['}', ']'].includes(current) && isValue) {
+      depth--
+    }
+
+    if (current === ',' && depth <= 0 && !isQuote) {
+      isValue = false
+    }
+
+    if (current === ',' && !isValue) {
+      values.push(buffer)
+      buffer = ''
+      continue
+    }
+
+    buffer += current
+
+    if (i + 1 === input.length && buffer) {
+      values.push(buffer)
+    }
+  }
+
+  return values
+}
+
+function splitArrayValues(rawInput: string) {
+  const input = rawInput.slice(1, -1)
+  const values = []
+  let buffer = ''
+  let depth = 0
+  let commaCount = 0
+
+  for (let i = 0; i < input.length; i++) {
+    const current = input[i]
+
+    if (['{', '['].includes(current)) {
+      depth++
+    }
+
+    if (['}', ']'].includes(current)) {
+      depth--
+    }
+
+    if (current === ',' && depth <= 0) {
+      values.push(buffer)
+      buffer = ''
+      commaCount++
+      continue
+    }
+
+    buffer += current
+
+    if (i + 1 === input.length && buffer) {
+      values.push(buffer)
+    }
+  }
+
+  if (commaCount >= values.length) {
+    throw new Error('Invalid input.')
+  }
+
+  return values
+}
+
 export function parse(str: string) {
   const SIMPLE_RETURNS_MAP = {
     '[]': [],
@@ -29,7 +115,7 @@ export function parse(str: string) {
   }
 
   if (str.startsWith('{') && str.endsWith('}')) {
-    const pairs = str.slice(1, -1).split(',')
+    const pairs = splitObjectValues(str)
 
     return pairs.reduce((acc, pair) => {
       const index = pair.indexOf(':')
@@ -44,7 +130,7 @@ export function parse(str: string) {
   }
 
   if (str.startsWith('[') && str.endsWith(']')) {
-    const values = str.slice(1, -1).split(',')
+    const values = splitArrayValues(str)
 
     return values.map((value) => parse(value))
   }

@@ -69,3 +69,22 @@ describe('parse', () => {
     expect(() => parse('{"a":}')).toThrow('Invalid input.')
   })
 })
+
+// https://bigfrontend.dev/problem/implement-JSON-parse/discuss/2395
+describe('parse: extra tests from the community', () => {
+  it('[1,{"a":[1,2,3]}]', () => {
+    expect.hasAssertions()
+
+    expect(parse('[1,{"a":[1,2,3]}]')).toStrictEqual(
+      JSON.parse('[1,{"a":[1,2,3]}]'),
+    )
+  })
+
+  it('{"a":"hello,world"}', () => {
+    expect.hasAssertions()
+
+    expect(parse('{"a":"hello,world"}')).toStrictEqual(
+      JSON.parse('{"a":"hello,world"}'),
+    )
+  })
+})
