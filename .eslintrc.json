@@ -16,5 +16,8 @@
       "extends": ["plugin:jest/all"],
       "files": ["./**/*.spec.ts"]
     }
-  ]
+  ],
+  "rules": {
+    "no-console": "error"
+  }
 }
